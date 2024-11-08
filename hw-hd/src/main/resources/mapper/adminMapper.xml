@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.mttk.mapper.adminMapper">
+    <insert id="bookAdd" useGeneratedKeys="true" keyProperty="id">
+     INSERT INTO books (title, author, description, price, stock)
+     VALUES (#{title}, #{author}, #{description}, #{price}, #{stock})
+     </insert>
+    <update id="bookUpdate">
+        UPDATE books
+        SET title = #{title},
+            author = #{author},
+            description = #{description},
+            price = #{price},
+            stock = #{stock}
+        WHERE id = #{id};
+    </update>
+    <delete id="deleteBook">
+        delete from books
+        where id = #{id}
+    </delete>
+    <select id="bookList">
+        select *
+        from books
+    </select>
+    <select id="getCartList">
+        SELECT
+            c.id AS cartId,
+            b.title,
+            b.author,
+            b.description,
+            b.price,
+            c.quantity,
+            (b.price * c.quantity) AS totalPrice
+        FROM
+            carts c
+                JOIN
+            books b ON c.book_id = b.id
+    </select>
+    <select id="getOrderList">
+        SELECT
+            o.id AS orderId,
+            b.title,
+            b.author,
+            b.price,
+            o.quantity,
+            (b.price * o.quantity) AS totalPrice
+        FROM
+            orders o
+                JOIN
+            books b ON o.book_id = b.id
+    </select>
+    <select id="getUserList">
+        select *
+        from users
+        where role = "user"
+    </select>
+    <insert id="userAdd">
+        INSERT INTO users (username, password,email,role,balance)
+        VALUES (#{username}, #{password}, #{email}, #{role}, #{balance})
+    </insert>
+    <update id="userUpdate">
+        UPDATE users
+        SET username = #{username},
+            password = #{password},
+            email = #{email},
+            role = #{role},
+            balance = #{balance}
+        WHERE id = #{id};
+    </update>
+    <delete id="userDelete">
+        delete from users
+        where id = #{id}
+    </delete>
+</mapper>

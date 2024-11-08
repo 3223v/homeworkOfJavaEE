@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.mttk.mapper.userMapper">
+    <select id="getUserByUsername">
+        select *
+        from users
+        where username = #{username}
+    </select>
+    <select id="getBookList">
+        select *
+        from books
+    </select>
+    <select id="getBookById">
+        select *
+        from books
+        where id=#{bookId}
+    </select>
+    <select id="getUserById">
+        select *
+        from users
+        where id = #{userId}
+    </select>
+    <update id="updateUserBalance">
+        update users
+        set balance = #{newBalance}
+        where id=#{userId}
+    </update>
+    <insert id="insertOrder">
+        insert  into orders(user_id,book_id,quantity)
+        values (#{userId},#{bookId},#{quantity})
+    </insert>
+    <insert id="insertCart">
+        insert  into carts(user_id,book_id,quantity)
+        values (#{userId},#{bookId},#{quantity})
+    </insert>
+    <select id="getCartList">
+        SELECT
+            c.id AS cartId,
+            b.title,
+            b.author,
+            b.description,
+            b.price,
+            c.quantity,
+            (b.price * c.quantity) AS totalPrice
+        FROM
+            carts c
+                JOIN
+            books b ON c.book_id = b.id
+        WHERE
+            c.user_id = #{userId};
+    </select>
+    <select id="getCartById">
+        select *
+        from carts
+        where id = #{cartId}
+    </select>
+    <delete id="deleteCart">
+        DELETE FROM carts
+        WHERE id = #{cartId};
+    </delete>
+    <update id="updateCart">
+        UPDATE carts
+        SET quantity = #{quantity}
+        WHERE id = #{cartId};
+
+    </update>
+    <select id="getOrderList">
+        SELECT
+            o.id AS orderId,
+            b.title,
+            b.author,
+            b.price,
+            o.quantity,
+            (b.price * o.quantity) AS totalPrice
+        FROM
+            orders o
+                JOIN
+            books b ON o.book_id = b.id
+        WHERE
+            o.user_id = #{userId};
+    </select>
+    <delete id="deleteOrder">
+        DELETE FROM orders
+        WHERE id = #{orderId};
+
+    </delete>
+    <update id="updateSelf">
+        UPDATE users
+        SET username = #{username},
+            password = #{password},
+            email = #{email}
+        WHERE id = #{userId};
+
+    </update>
+</mapper>
